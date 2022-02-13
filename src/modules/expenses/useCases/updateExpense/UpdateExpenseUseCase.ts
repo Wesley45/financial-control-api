@@ -37,7 +37,7 @@ class UpdateExpenseUseCase {
       );
 
     if (expenseAlreadyExists) {
-      throw new AppError("Revenue already recorded");
+      throw new AppError("Expense already recorded");
     }
 
     await this.expensesRepository.update(

@@ -121,7 +121,7 @@ class ExpensesRepositoryInMemory implements IExpensesRepository {
       expense.description = description;
       expense.date = date;
       expense.amount = amount;
-      expense.category_id = category_id;
+      expense.category_id = expense.category_id;
     }
   }
 }
