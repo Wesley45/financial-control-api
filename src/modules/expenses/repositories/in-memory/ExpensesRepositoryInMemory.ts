@@ -108,7 +108,7 @@ class ExpensesRepositoryInMemory implements IExpensesRepository {
     year: string,
     month: string
   ): Promise<{ name: string; total: string }[]> {
-    throw new Error("Method not implemented.");
+    return [{ name: "", total: "" }];
   }
 
   async update(

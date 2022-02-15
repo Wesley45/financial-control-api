@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { Expense } from "./Expense";
@@ -11,8 +11,8 @@ class Category {
   @Column()
   name: string;
 
-  @ManyToOne(() => Expense, (expense) => expense.categories)
-  expense?: Expense;
+  @OneToMany(() => Expense, (expense) => expense.category)
+  expenses?: Expense[];
 
   @Column()
   active: string;

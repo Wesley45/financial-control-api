@@ -2,7 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -24,8 +25,9 @@ class Expense {
   @Column("timestamp")
   date: Date;
 
-  @OneToMany(() => Category, (category) => category.expense)
-  categories: Category[];
+  @ManyToOne(() => Category, (category) => category.expenses)
+  @JoinColumn({ name: "category_id" })
+  category: Category;
 
   @Column()
   category_id?: string;
