@@ -7,6 +7,8 @@ import { ListExpensesByMonthController } from "@modules/expenses/useCases/listEx
 import { ShowExpenseController } from "@modules/expenses/useCases/showExpense/ShowExpenseController";
 import { UpdateExpenseController } from "@modules/expenses/useCases/updateExpense/UpdateExpenseController";
 
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
+
 const expensesRouter = Router();
 
 const createExpenseController = new CreateExpenseController();
@@ -16,11 +18,19 @@ const listExpensesByMonthController = new ListExpensesByMonthController();
 const showExpenseController = new ShowExpenseController();
 const updateExpenseController = new UpdateExpenseController();
 
-expensesRouter.get("/", listExpensesController.handle);
-expensesRouter.get("/:id", showExpenseController.handle);
-expensesRouter.get("/:year/:month", listExpensesByMonthController.handle);
-expensesRouter.post("/", createExpenseController.handle);
-expensesRouter.put("/:id", updateExpenseController.handle);
-expensesRouter.delete("/:id", deleteExpenseController.handle);
+expensesRouter.get("/", ensureAuthenticated, listExpensesController.handle);
+expensesRouter.get("/:id", ensureAuthenticated, showExpenseController.handle);
+expensesRouter.get(
+  "/:year/:month",
+  ensureAuthenticated,
+  listExpensesByMonthController.handle
+);
+expensesRouter.post("/", ensureAuthenticated, createExpenseController.handle);
+expensesRouter.put("/:id", ensureAuthenticated, updateExpenseController.handle);
+expensesRouter.delete(
+  "/:id",
+  ensureAuthenticated,
+  deleteExpenseController.handle
+);
 
 export { expensesRouter };

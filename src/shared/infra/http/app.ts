@@ -2,6 +2,7 @@ import "reflect-metadata";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 
+import "./bootstrap";
 import "@shared/container";
 import createConnection from "@shared/infra/typeorm";
 

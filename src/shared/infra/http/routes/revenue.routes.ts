@@ -7,6 +7,8 @@ import { ListRevenueByMonthController } from "@modules/revenue/useCases/listReve
 import { ShowRevenueController } from "@modules/revenue/useCases/showRevenue/ShowRevenueController";
 import { UpdateRevenueController } from "@modules/revenue/useCases/updateRevenue/UpdateRevenueController";
 
+import { ensureAuthenticated } from "../middlewares/ensureAuthenticated";
+
 const revenueRoutes = Router();
 
 const createRevenueController = new CreateRevenueController();
@@ -16,11 +18,19 @@ const listRevenueByMonthController = new ListRevenueByMonthController();
 const showRevenueUseCase = new ShowRevenueController();
 const updateRevenueController = new UpdateRevenueController();
 
-revenueRoutes.get("/", listRevenueController.handle);
-revenueRoutes.get("/:id", showRevenueUseCase.handle);
-revenueRoutes.get("/:year/:month", listRevenueByMonthController.handle);
-revenueRoutes.post("/", createRevenueController.handle);
-revenueRoutes.put("/:id", updateRevenueController.handle);
-revenueRoutes.delete("/:id", deleteRevenueController.handle);
+revenueRoutes.get("/", ensureAuthenticated, listRevenueController.handle);
+revenueRoutes.get("/:id", ensureAuthenticated, showRevenueUseCase.handle);
+revenueRoutes.get(
+  "/:year/:month",
+  ensureAuthenticated,
+  listRevenueByMonthController.handle
+);
+revenueRoutes.post("/", ensureAuthenticated, createRevenueController.handle);
+revenueRoutes.put("/:id", ensureAuthenticated, updateRevenueController.handle);
+revenueRoutes.delete(
+  "/:id",
+  ensureAuthenticated,
+  deleteRevenueController.handle
+);
 
 export { revenueRoutes };
