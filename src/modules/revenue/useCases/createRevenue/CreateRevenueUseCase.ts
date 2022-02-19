@@ -23,7 +23,7 @@ class CreateRevenueUseCase {
     amount,
     date,
   }: IRequest): Promise<RevenueModel> {
-    const dateRevenue = new Date(`${date} 00:00:00`);
+    const dateRevenue = new Date(date);
 
     const revenueAlreadyExists =
       await this.revenueRepository.findByDescriptionAndDate(

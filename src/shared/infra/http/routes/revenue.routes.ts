@@ -1,4 +1,8 @@
 import { Router } from "express";
+import { celebrate, Joi, Segments } from "celebrate";
+import joidate from "@joi/date";
+
+const JoiExtended = Joi.extend(joidate) as typeof Joi;
 
 import { CreateRevenueController } from "@modules/revenue/useCases/createRevenue/CreateRevenueController";
 import { DeleteRevenueController } from "@modules/revenue/useCases/deleteRevenue/DeleteRevenueController";
@@ -19,17 +23,77 @@ const showRevenueUseCase = new ShowRevenueController();
 const updateRevenueController = new UpdateRevenueController();
 
 revenueRoutes.get("/", ensureAuthenticated, listRevenueController.handle);
-revenueRoutes.get("/:id", ensureAuthenticated, showRevenueUseCase.handle);
+
+revenueRoutes.get(
+  "/:id",
+  [
+    ensureAuthenticated,
+    celebrate({
+      [Segments.PARAMS]: {
+        id: JoiExtended.string().uuid().required(),
+      },
+    }),
+  ],
+  showRevenueUseCase.handle
+);
+
 revenueRoutes.get(
   "/:year/:month",
-  ensureAuthenticated,
+  [
+    ensureAuthenticated,
+    celebrate({
+      [Segments.PARAMS]: {
+        year: JoiExtended.number().integer().required(),
+        month: JoiExtended.number().integer().required(),
+      },
+    }),
+  ],
   listRevenueByMonthController.handle
 );
-revenueRoutes.post("/", ensureAuthenticated, createRevenueController.handle);
-revenueRoutes.put("/:id", ensureAuthenticated, updateRevenueController.handle);
+
+revenueRoutes.post(
+  "/",
+  [
+    ensureAuthenticated,
+    celebrate({
+      [Segments.BODY]: {
+        description: JoiExtended.string().required(),
+        amount: JoiExtended.number().integer().required(),
+        date: JoiExtended.date().format("YYYY-MM-DD").utc().required(),
+      },
+    }),
+  ],
+  createRevenueController.handle
+);
+
+revenueRoutes.put(
+  "/:id",
+  [
+    ensureAuthenticated,
+    celebrate({
+      [Segments.BODY]: {
+        description: JoiExtended.string().required(),
+        amount: JoiExtended.number().integer().required(),
+        date: JoiExtended.date().format("YYYY-MM-DD").utc().required(),
+      },
+      [Segments.PARAMS]: {
+        id: JoiExtended.string().uuid().required(),
+      },
+    }),
+  ],
+  updateRevenueController.handle
+);
+
 revenueRoutes.delete(
   "/:id",
-  ensureAuthenticated,
+  [
+    ensureAuthenticated,
+    celebrate({
+      [Segments.PARAMS]: {
+        id: JoiExtended.string().uuid().required(),
+      },
+    }),
+  ],
   deleteRevenueController.handle
 );
 

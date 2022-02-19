@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { celebrate, Joi, Segments } from "celebrate";
 
 import { ShowMonthSummaryController } from "@modules/expenses/useCases/showMonthSummary/ShowMonthSummaryController";
 
@@ -10,7 +11,15 @@ const showMonthSummaryController = new ShowMonthSummaryController();
 
 summaryRoutes.get(
   "/:year/:month",
-  ensureAuthenticated,
+  [
+    ensureAuthenticated,
+    celebrate({
+      [Segments.PARAMS]: {
+        year: Joi.number().integer().required(),
+        month: Joi.number().integer().required(),
+      },
+    }),
+  ],
   showMonthSummaryController.handle
 );
 
